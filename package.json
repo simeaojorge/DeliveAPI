@@ -23,6 +23,7 @@
     "bunyan-winston-adapter": "^0.2.0",
     "cpf_cnpj": "^0.2.0",
     "i18n": "^0.8.3",
+    "jsonwebtoken": "^8.2.0",
     "lodash": "^4.17.4",
     "mongoose": "^4.11.4",
     "mongoose-api-query": "^0.1.1-pre",

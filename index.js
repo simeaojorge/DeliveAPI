@@ -6,7 +6,7 @@
 const config        = require('./config'),
       restify       = require('restify'),
       bunyan        = require('bunyan'),
-	  restifyPlugins= require('restify-plugins'),
+	  restifyPlugins= require('restify').plugins,
       winston       = require('winston'),
       bunyanWinston = require('bunyan-winston-adapter'),
       mongoose      = require('mongoose'),
