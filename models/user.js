@@ -21,24 +21,32 @@ var documentIdValidator = [
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
         trim: true,
     },
     email: {
         type: String,
-        required: true,
         trim: true,
         unique: true
     },
+    phone_number: {
+        type: Number,
+        required: true
+    },
+    verification_code: {
+        type: String
+    },
+    verification_code_date: {
+        type: Date,
+        default: Date.now()
+    },
     documentId: {
         type: String,
-        required: true,
         unique: true,
         validate: documentIdValidator
     },
     password: {
         type: String,
-        required: true,
+        trim: true,
     },
     status: {
         type: String,

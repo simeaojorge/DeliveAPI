@@ -5,16 +5,27 @@
 **/
 
 const   _           = require('lodash'),
-        errors      = require('restify-errors')
+        errors      = require('restify-errors'),
+        Sms         = require('../app/sms/sms'),
+        crypto      = require('crypto');
 
 /**
 * Model Schema
 **/
-const User = require('../models/user')
+const User = require('../models/user');
 
 server.post('/users', function(req, res, next) {
 
-    let data = req.body || {}
+    let data = req.body || {};
+
+    var array = [];
+    var count = 0;
+
+    let hash = new Date();
+    hash = hash.getTime().toString();
+    hash = crypto.createHash('md5').update(hash).digest('hex');
+
+    data.verification_code = hash.substr(-4);
 
     let user = new User(data)
     user.save(function(err) {
@@ -25,6 +36,14 @@ server.post('/users', function(req, res, next) {
             next()
         }
 
+        const sms = new Sms();
+        try {
+         
+            sms.send(data.phone_number, `Seu código de verificação é ${data.verification_code}`);
+        } catch (error) {
+            return next(new errors.InternalError(error.message))
+        }
+    
         res.send(201, data)
         next()
 

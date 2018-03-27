@@ -10,7 +10,7 @@ const config        = require('./config'),
       winston       = require('winston'),
       bunyanWinston = require('bunyan-winston-adapter'),
       mongoose      = require('mongoose'),
-      i18n = require('i18n')
+      i18n = require('i18n');
 
 /**
  * Logging
@@ -49,7 +49,7 @@ global.server = restify.createServer({
 
 /**
  * Middleware
- */
+*/
 server.use(restifyPlugins.bodyParser({ mapParams: true }))
 server.use(restifyPlugins.acceptParser(server.acceptable))
 server.use(restifyPlugins.queryParser({ mapParams: true }))
@@ -67,7 +67,7 @@ server.on('uncaughtException', (req, res, route, err) => {
 /**
  * Lift Server, Connect to DB & Bind Routes
  */
-server.listen(config.port, function() {
+server.listen(config.port, () => {
 
     mongoose.connection.on('error', function(err) {
         log.error('Mongoose default connection error: ' + err)
@@ -89,10 +89,9 @@ server.listen(config.port, function() {
             config.env
         )
 
-        require('./routes')
-
+        require('./routes');
     })
 
-    global.db = mongoose.connect(config.db.uri)
-
+    global.db = mongoose.connect(config.db.uri);
+    
 })
