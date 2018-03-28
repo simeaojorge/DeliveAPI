@@ -3,8 +3,8 @@
 /**
  * Module Dependencies
  */
-const _     = require('lodash'),
-    errors  = require('restify-errors')
+const _ = require('lodash')
+const errors = require('restify-errors')
 
 require('./user')
 require('./location')

@@ -1,0 +1,7 @@
+{
+    "extends": "standard",
+    "rules": {
+        "no-unused-vars": 1,
+        "no-path-concat": 0
+    }
+}

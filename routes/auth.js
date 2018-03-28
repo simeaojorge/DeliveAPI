@@ -4,38 +4,33 @@
 * Module dependencies
 **/
 
-const   _           = require('lodash'),
-        errors      = require('restify-errors')
+const _ = require('lodash')
+const errors = require('restify-errors')
 
 /**
 * Model Schema
 **/
 const User = require('../models/user')
-const jwt  = require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 const secret = 'ComaComaCOMABacon!!!!###ComCheddar'
 
-server.post('/auth', function(req, res, next) {
+global.server.post('/auth', function (req, res, next) {
+  let data = req.body || {}
 
-    let data = req.body || {}
+  let user = new User(data)
+  User.find({email: user.email, password: user.password}, function (err, doc) {
+    if (err) {
+      global.log.error(err)
+      return next(new errors.InternalError(err.message))
+    }
 
-    let user = new User(data)
-    User.find({email: user.email, password: user.password}, function(err, doc) {
-
-        if (err) {
-            log.error(err)
-            return next(new errors.InternalError(err.message))
-            next()
-        }
-
-        if(doc.length > 0){
-            let token = jwt.sign({id: doc._id}, secret)
-            res.send({"access_token": token})
-            next()
-        }
-        else{
-            res.send(null)
-            next()
-        }
-    })
-
+    if (doc.length > 0) {
+      let token = jwt.sign({id: doc._id}, secret)
+      res.send({'access_token': token})
+      next()
+    } else {
+      res.send(null)
+      next()
+    }
+  })
 })
