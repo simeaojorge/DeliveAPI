@@ -29,14 +29,15 @@ global.server.post('/users', function (req, res, next) {
       return next(new errors.InvalidContentError(err.message))
     }
 
-    const today = new Date()
-    const codeDate = new Date(doc.verification_code_date)
-    codeDate.setHours(codeDate.getHours() + 5)
-
     if (doc !== null && today.getTime() < codeDate.getTime()) {
       res.send(doc)
       next()
     } else if (doc !== null) {
+
+      const today = new Date()
+      const codeDate = new Date(doc.verification_code_date)
+      codeDate.setHours(codeDate.getHours() + 5)
+
       _.extend(doc, {
         verification_code: data.verification_code,
         verification_code_date: data.verification_code_date
