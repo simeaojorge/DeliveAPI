@@ -39,7 +39,7 @@ server.post('/users', function(req, res, next) {
         const sms = new Sms();
         try {
          
-            sms.send(data.phone_number, `Seu código de verificação é ${data.verification_code}`);
+            //sms.send(data.phone_number, `Seu código de verificação é ${data.verification_code}`);
         } catch (error) {
             return next(new errors.InternalError(error.message))
         }
