@@ -49,7 +49,8 @@ const UserSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'verified', 'completed']
+    enum: ['pending', 'verified', 'completed'],
+    default: 'pending'
   }
 }, { minimize: false })
 

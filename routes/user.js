@@ -23,23 +23,60 @@ global.server.post('/users', function (req, res, next) {
 
   data.verification_code = hash.substr(-4)
 
-  let user = new User(data)
-  user.save(function (err) {
+  User.findOne({ phone_number: data.phone_number }, function (err, doc) {
     if (err) {
-      console.error(err)
-      return next(new errors.InternalError(err.message))
+      global.log.error(err)
+      return next(new errors.InvalidContentError(err.message))
     }
 
-    const sms = new Sms()
-    try {
+    const today = new Date()
+    const codeDate = new Date(doc.verification_code_date)
+    codeDate.setHours(codeDate.getHours() + 5)
 
-      // sms.send(data.phone_number, `Seu código de verificação é ${data.verification_code}`);
-    } catch (error) {
-      return next(new errors.InternalError(error.message))
+    if (doc !== null && today.getTime() < codeDate.getTime()) {
+      res.send(doc)
+      next()
+    } else if (doc !== null) {
+      _.extend(doc, {
+        verification_code: data.verification_code,
+        verification_code_date: data.verification_code_date
+      })
+
+      User.update({ _id: doc._id }, doc, function (err) {
+        if (err) {
+          global.log.error(err)
+          return next(new errors.InvalidContentError(err.message))
+        }
+
+        const sms = new Sms()
+        try {
+          sms.send(doc.phone_number, `Seu código de verificação é: ${doc.verification_code} (Código válido por 5 horas)`)
+        } catch (error) {
+          return next(new errors.InternalError(error.message))
+        }
+
+        res.send(200, doc)
+        next()
+      })
+    } else {
+      let user = new User(data)
+      user.save(function (err) {
+        if (err) {
+          console.error(err)
+          return next(new errors.InternalError(err.message))
+        }
+
+        const sms = new Sms()
+        try {
+          sms.send(data.phone_number, `Seu código de verificação é: ${data.verification_code} (Código válido por 5 horas)`)
+        } catch (error) {
+          return next(new errors.InternalError(error.message))
+        }
+
+        res.send(201, data)
+        next()
+      })
     }
-
-    res.send(201, data)
-    next()
   })
 })
 
