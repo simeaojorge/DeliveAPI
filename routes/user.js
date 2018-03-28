@@ -73,8 +73,8 @@ global.server.get('/users/:user_id', function (req, res, next) {
   })
 })
 
-global.server.get('/users/:user_phone_number', function (req, res, next) {
-  User.findOne({ phone_number: req.params.user_phone_number }, function (err, doc) {
+global.server.get('/users/phone_number/:phone_number', function (req, res, next) {
+  User.findOne({ phone_number: req.params.phone_number }, function (err, doc) {
     if (err) {
       global.log.error(err)
       return next(new errors.InvalidContentError(err.message))
