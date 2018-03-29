@@ -29,13 +29,14 @@ global.server.post('/users', function (req, res, next) {
       return next(new errors.InvalidContentError(err.message))
     }
 
-    if (doc !== null && today.getTime() < codeDate.getTime()) {
-      res.send(doc)
-      next()
-    } else if (doc !== null) {
-
+    if (doc !== null) {
       const today = new Date()
       const codeDate = new Date(doc.verification_code_date)
+
+      if (today.getTime() < codeDate.getTime()) {
+        res.send(doc)
+        next()
+      }
       codeDate.setHours(codeDate.getHours() + 5)
 
       _.extend(doc, {
