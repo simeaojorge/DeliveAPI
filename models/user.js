@@ -24,8 +24,7 @@ const UserSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    trim: true,
-    unique: true
+    trim: true
   },
   phone_number: {
     type: Number,
@@ -40,7 +39,6 @@ const UserSchema = new mongoose.Schema({
   },
   documentId: {
     type: String,
-    unique: true,
     validate: documentIdValidator
   },
   password: {
@@ -49,7 +47,7 @@ const UserSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'verified', 'completed'],
+    enum: ['  pending', 'verified', 'completed'],
     default: 'pending'
   }
 }, { minimize: false })

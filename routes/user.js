@@ -21,7 +21,8 @@ global.server.post('/users', function (req, res, next) {
   hash = hash.getTime().toString()
   hash = crypto.createHash('md5').update(hash).digest('hex')
 
-  data.verification_code = hash.substr(-4)
+  data.verification_code = hash.substr(-4).toUpperCase()
+  data.phone_number = data.phone_number.replace(/[^0-9]/g, '')
 
   User.findOne({ phone_number: data.phone_number }, function (err, doc) {
     if (err) {
@@ -30,18 +31,25 @@ global.server.post('/users', function (req, res, next) {
     }
 
     if (doc !== null) {
+      if (doc.status !== 'pending') {
+        res.send(200, doc)
+        next()
+        return
+      }
+
       const today = new Date()
       const codeDate = new Date(doc.verification_code_date)
+      codeDate.setHours(codeDate.getHours() + 5)
 
       if (today.getTime() < codeDate.getTime()) {
-        res.send(doc)
+        res.send(200, doc)
         next()
+        return
       }
-      codeDate.setHours(codeDate.getHours() + 5)
 
       _.extend(doc, {
         verification_code: data.verification_code,
-        verification_code_date: data.verification_code_date
+        verification_code_date: today
       })
 
       User.update({ _id: doc._id }, doc, function (err) {
