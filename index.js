@@ -5,7 +5,9 @@
  */
 const config = require('./config')
 const restify = require('restify')
+
 const bunyan = require('bunyan')
+const Auth = require('./app/auth')
 const restifyPlugins = require('restify').plugins
 const winston = require('winston')
 const bunyanWinston = require('bunyan-winston-adapter')
@@ -26,6 +28,8 @@ global.log = new winston.Logger({
     })
   ]
 })
+
+global.token = new Auth()
 
 /**
 * Internationalization

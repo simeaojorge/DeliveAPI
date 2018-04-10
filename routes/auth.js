@@ -11,21 +11,17 @@ const errors = require('restify-errors')
 * Model Schema
 **/
 const User = require('../models/user')
-const jwt = require('jsonwebtoken')
-const secret = 'ComaComaCOMABacon!!!!###ComCheddar'
 
 global.server.post('/auth', function (req, res, next) {
   let data = req.body || {}
-
-  let user = new User(data)
-  User.find({email: user.email, password: user.password}, function (err, doc) {
+  User.find({_id: data.id, password: data.password}, function (err, doc) {
     if (err) {
       global.log.error(err)
       return next(new errors.InternalError(err.message))
     }
 
     if (doc.length > 0) {
-      let token = jwt.sign({id: doc._id}, secret)
+      let token = global.token.signToken({id: doc._id})
       res.send({'access_token': token})
       next()
     } else {
