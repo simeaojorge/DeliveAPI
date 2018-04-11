@@ -93,7 +93,7 @@ global.server.post('/users', function (req, res, next) {
 /**
  * LIST
  */
-global.server.get('/users', global.token.verifyToken, (req, res, next) => {
+global.server.get('/users', (req, res, next) => {
   User.apiQuery(req.params, function (err, docs) {
     if (err) {
       global.log.error(err)
